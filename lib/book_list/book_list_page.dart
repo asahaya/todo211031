@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:todo211031/add_book/add_book_page.dart';
 import 'package:todo211031/book_list/book_list_model.dart';
 import 'package:todo211031/domain/book.dart';
+import 'package:todo211031/edit_book/edit_book_page.dart';
 
 class BookListPage extends StatelessWidget {
   @override
@@ -24,9 +26,40 @@ class BookListPage extends StatelessWidget {
 
             final List<Widget> widgets = books
                 .map(
-                  (book) => ListTile(
-                    title: Text(book.title),
-                    subtitle: Text(book.author),
+                  (book) => Slidable(
+                    actionPane: SlidableDrawerActionPane(),
+                    child: ListTile(
+                      title: Text(book.title),
+                      subtitle: Text(book.author),
+                    ),
+                    secondaryActions: <Widget>[
+                      IconSlideAction(
+                        caption: 'edit',
+                        color: Colors.black45,
+                        icon: Icons.edit,
+                        onTap: () async{
+                          final String? title = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditBookPage(book),
+                              fullscreenDialog: false, //下から遷移する
+                            ),
+                          );
+                          if (title != null) {
+                            final snackbar = SnackBar(
+                                backgroundColor: Colors.grey,
+                                content: Text("$titleを編集しました"));
+                            ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                          }
+                        },
+                      ),
+                      IconSlideAction(
+                        caption: 'Delete',
+                        color: Colors.red,
+                        icon: Icons.delete,
+                        onTap: () => null,
+                      ),
+                    ],
                   ),
                 )
                 .toList();
@@ -52,7 +85,6 @@ class BookListPage extends StatelessWidget {
                     content: Text("本を追加しました"));
                 ScaffoldMessenger.of(context).showSnackBar(snackbar);
               }
-
               model.fetchBookList();
             },
             tooltip: 'Increment',
