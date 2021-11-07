@@ -42,7 +42,7 @@ class BookListPage extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => EditBookPage(book),
-                              fullscreenDialog: false, //下から遷移する
+                              // fullscreenDialog: false, //下から遷移する
                             ),
                           );
                           if (title != null) {
@@ -51,6 +51,7 @@ class BookListPage extends StatelessWidget {
                                 content: Text("$titleを編集しました"));
                             ScaffoldMessenger.of(context).showSnackBar(snackbar);
                           }
+                          model.fetchBookList();
                         },
                       ),
                       IconSlideAction(
