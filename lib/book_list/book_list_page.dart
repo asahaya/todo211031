@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo211031/add_book/add_book_page.dart';
 import 'package:todo211031/book_list/book_list_model.dart';
 import 'package:todo211031/domain/book.dart';
-
-//aaaddddddddd
 
 class BookListPage extends StatelessWidget {
   @override
@@ -26,21 +25,40 @@ class BookListPage extends StatelessWidget {
             final List<Widget> widgets = books
                 .map(
                   (book) => ListTile(
-                title: Text(book.title),
-                subtitle: Text(book.author),
-              ),
-            )
+                    title: Text(book.title),
+                    subtitle: Text(book.author),
+                  ),
+                )
                 .toList();
             return ListView(
               children: widgets,
             );
           }),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: null,
-          tooltip: 'Increment',
-          child: Icon(Icons.add),
-        ),
+        floatingActionButton:
+            Consumer<BookListModel>(builder: (context, model, child) {
+          return FloatingActionButton(
+            onPressed: () async {
+              final bool? added = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddBookPage(),
+                  fullscreenDialog: true, //下から遷移する
+                ),
+              );
+              if (added != null && added) {
+                final snackbar = SnackBar(
+                    backgroundColor: Colors.greenAccent,
+                    content: Text("本を追加しました"));
+                ScaffoldMessenger.of(context).showSnackBar(snackbar);
+              }
+
+              model.fetchBookList();
+            },
+            tooltip: 'Increment',
+            child: Icon(Icons.add),
+          );
+        }),
       ),
     );
   }
