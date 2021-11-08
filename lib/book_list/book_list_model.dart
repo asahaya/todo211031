@@ -16,11 +16,13 @@ class BookListModel extends ChangeNotifier {
       final String id = document.id;
       final String title = data['title'];
       final String author = data['author'];
-      return Book(id,title, author);
+      final String? imageURL = data['imageURL'];
+      return Book(id,title, author,imageURL);
     }).toList();
 
       this.books = books;
       notifyListeners();
+
     }
 
     Future deleteBook(Book book)async{

@@ -29,6 +29,9 @@ class BookListPage extends StatelessWidget {
                   (book) => Slidable(
                     actionPane: SlidableDrawerActionPane(),
                     child: ListTile(
+                      leading: book.imageURL != null
+                          ? Image.network(book.imageURL!)
+                          : null,
                       title: Text(book.title),
                       subtitle: Text(book.author),
                     ),
@@ -116,6 +119,7 @@ class BookListPage extends StatelessWidget {
               onPressed: ()async{
                 //modelで削除
                 await model.deleteBook(book);
+                Navigator.pop(context);
                 final snackbar = SnackBar(
                     backgroundColor: Colors.red,
                     content: Text("${book.title}を削除しました"));
