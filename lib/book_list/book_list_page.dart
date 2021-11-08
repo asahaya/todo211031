@@ -6,6 +6,7 @@ import 'package:todo211031/add_book/add_book_page.dart';
 import 'package:todo211031/book_list/book_list_model.dart';
 import 'package:todo211031/domain/book.dart';
 import 'package:todo211031/edit_book/edit_book_page.dart';
+import 'package:todo211031/login/login_page.dart';
 
 class BookListPage extends StatelessWidget {
   @override
@@ -15,6 +16,17 @@ class BookListPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text('本一覧'),
+          actions: [
+            IconButton(onPressed: ()async{
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginPage(),
+                  fullscreenDialog: true, //下から遷移する
+                ),
+              );
+            }, icon: Icon(Icons.person)),
+          ],
         ),
         body: Center(
           child: Consumer<BookListModel>(builder: (context, model, child) {
