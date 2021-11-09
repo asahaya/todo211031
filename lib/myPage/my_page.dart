@@ -7,7 +7,7 @@ class MyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<MyModel>(
-      create: (_) => MyModel(),
+      create: (_) => MyModel()..fetchUser(),
       child: Scaffold(
         appBar: AppBar(
           title: Text('マイページ'),
@@ -19,7 +19,7 @@ class MyPage extends StatelessWidget {
                 Column(
                   children:  [
                     Text("名前"),
-                    Text("mallAd"),
+                    Text(model.email ?? "emailなし"),
                     Text("自己紹介"),
                   ],
                 ),
