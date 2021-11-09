@@ -8,6 +8,7 @@ import 'package:todo211031/book_list/book_list_model.dart';
 import 'package:todo211031/domain/book.dart';
 import 'package:todo211031/edit_book/edit_book_page.dart';
 import 'package:todo211031/login/login_page.dart';
+import 'package:todo211031/myPage/my_page.dart';
 
 class BookListPage extends StatelessWidget {
   @override
@@ -21,6 +22,13 @@ class BookListPage extends StatelessWidget {
             IconButton(
                 onPressed: () async {
                   if (FirebaseAuth.instance.currentUser != null) {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyPage(),
+                        fullscreenDialog: true, //下から遷移する
+                      ),
+                    );
                     print("ログインしている");
                   } else {
                     await Navigator.push(
