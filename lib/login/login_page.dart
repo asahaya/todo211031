@@ -18,69 +18,84 @@ class LoginPage extends StatelessWidget {
         ),
         body: Center(
           child: Consumer<LoginModel>(builder: (context, model, child) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: model.titleCon,
-                    decoration: InputDecoration(
-                      hintText: "Email",
+            return Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: model.titleCon,
+                        decoration: InputDecoration(
+                          hintText: "Email",
+                        ),
+                        onChanged: (text) {
+                          //ここで取得したTextを使う
+                          // model.title = text;
+                          model.setEmail(text);
+                        },
+                      ),
+                      TextField(
+                        controller: model.authorCon,
+                        decoration: InputDecoration(
+                          hintText: "Password",
+                        ),
+                        onChanged: (text) {
+                          //ここで取得したTextを使う
+                          // model.author = text;
+                          model.setPassword(text);
+                        },
+                      ),
+                      ElevatedButton(
+                        onPressed:()async {
+                          model.startLoading();
+                          //画面遷移
+                          try {
+                            await model.login(); //追加の処理
+                            Navigator.of(context).pop();
+                          } catch (e) {
+                            final snackbar = SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text(e.toString()));
+                            ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                          }finally{
+                            model.endLoading();
+                          }
+                        },
+                        child: Text("ログイン"),
+                      ),
+                      TextButton(
+                        onPressed:()async {
+
+                          //画面遷移
+                          try {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RegisterPage(),
+                                fullscreenDialog: true, //下から遷移する
+                              ),
+                            );
+                          } catch (e) {
+                            final snackbar = SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text(e.toString()));
+                            ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                          }
+                        },
+                        child: Text("新規登録の方はこちら"),
+                      ),
+                    ],
+                  ),
+                ),
+                if(model.isLoading)
+                  Container(
+                    color: Colors.black54,
+                    child: Center(
+                      child: CircularProgressIndicator(),
                     ),
-                    onChanged: (text) {
-                      //ここで取得したTextを使う
-                      // model.title = text;
-                      model.setEmail(text);
-                    },
                   ),
-                  TextField(
-                    controller: model.authorCon,
-                    decoration: InputDecoration(
-                      hintText: "Password",
-                    ),
-                    onChanged: (text) {
-                      //ここで取得したTextを使う
-                      // model.author = text;
-                      model.setPassword(text);
-                    },
-                  ),
-                  ElevatedButton(
-                    onPressed:()async {
-                      //画面遷移
-                      try {
-                        await model.signUp(); //追加の処理
-                        // Navigator.of(context).pop(model.title);
-                      } catch (e) {
-                        final snackbar = SnackBar(
-                            backgroundColor: Colors.red,
-                            content: Text(e.toString()));
-                        ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                      }
-                    },
-                    child: Text("ログイン"),
-                  ),
-                  TextButton(
-                    onPressed:()async {
-                      //画面遷移
-                      try {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RegisterPage(),
-                            fullscreenDialog: true, //下から遷移する
-                          ),
-                        );
-                      } catch (e) {
-                        final snackbar = SnackBar(
-                            backgroundColor: Colors.red,
-                            content: Text(e.toString()));
-                        ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                      }
-                    },
-                    child: Text("新規登録の方はこちら"),
-                  ),
-                ],
-              ),
+              ],
             );
           }),
         ),

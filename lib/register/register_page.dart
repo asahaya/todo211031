@@ -46,6 +46,7 @@ class RegisterPage extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed:()async {
+                          model.startLoading();
                           //画面遷移
                           try {
                             await model.signUp(); //追加の処理
