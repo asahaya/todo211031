@@ -45,6 +45,7 @@ class LoginPage extends StatelessWidget {
                           // model.author = text;
                           model.setPassword(text);
                         },
+                        obscureText: true,
                       ),
                       ElevatedButton(
                         onPressed:()async {

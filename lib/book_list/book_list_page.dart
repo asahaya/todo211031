@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
@@ -17,15 +18,22 @@ class BookListPage extends StatelessWidget {
         appBar: AppBar(
           title: Text('本一覧'),
           actions: [
-            IconButton(onPressed: ()async{
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => LoginPage(),
-                  fullscreenDialog: true, //下から遷移する
-                ),
-              );
-            }, icon: Icon(Icons.person)),
+            IconButton(
+                onPressed: () async {
+                  if (FirebaseAuth.instance.currentUser != null) {
+                    print("ログインしている");
+                  } else {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(),
+                        fullscreenDialog: true, //下から遷移する
+                      ),
+                    );
+                    print("ログインしていない");
+                  }
+                },
+                icon: Icon(Icons.person)),
           ],
         ),
         body: Center(
@@ -52,7 +60,7 @@ class BookListPage extends StatelessWidget {
                         caption: 'edit',
                         color: Colors.black45,
                         icon: Icons.edit,
-                        onTap: () async{
+                        onTap: () async {
                           final String? title = await Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -64,7 +72,8 @@ class BookListPage extends StatelessWidget {
                             final snackbar = SnackBar(
                                 backgroundColor: Colors.grey,
                                 content: Text("$titleを編集しました"));
-                            ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackbar);
                           }
                           model.fetchBookList();
                         },
@@ -73,8 +82,8 @@ class BookListPage extends StatelessWidget {
                         caption: 'Delete',
                         color: Colors.red,
                         icon: Icons.delete,
-                        onTap: ()async{
-                          await showConfirmDialog(context, book,model);
+                        onTap: () async {
+                          await showConfirmDialog(context, book, model);
                         },
                       ),
                     ],
@@ -113,35 +122,35 @@ class BookListPage extends StatelessWidget {
     );
   }
 
-  Future showConfirmDialog(BuildContext context, Book book,BookListModel model){
-   return showDialog(
-      context:context,
-      // barrierDismissible: false,
-     builder: (_){
-        return AlertDialog(
-          title: Text("削除の確認"),
-          content: Text("${book.title}を削除しますか？"),
-          actions: [
-            TextButton(
-              child: Text("No"),
-              onPressed: ()=>Navigator.pop(context),
-            ),
-            TextButton(
-              child: Text("Yes"),
-              onPressed: ()async{
-                //modelで削除
-                await model.deleteBook(book);
-                Navigator.pop(context);
-                final snackbar = SnackBar(
-                    backgroundColor: Colors.red,
-                    content: Text("${book.title}を削除しました"));
-                model.fetchBookList();
-                ScaffoldMessenger.of(context).showSnackBar(snackbar);
-              },
-            ),
-          ],
-        );
-     }
-    );
+  Future showConfirmDialog(
+      BuildContext context, Book book, BookListModel model) {
+    return showDialog(
+        context: context,
+        // barrierDismissible: false,
+        builder: (_) {
+          return AlertDialog(
+            title: Text("削除の確認"),
+            content: Text("${book.title}を削除しますか？"),
+            actions: [
+              TextButton(
+                child: Text("No"),
+                onPressed: () => Navigator.pop(context),
+              ),
+              TextButton(
+                child: Text("Yes"),
+                onPressed: () async {
+                  //modelで削除
+                  await model.deleteBook(book);
+                  Navigator.pop(context);
+                  final snackbar = SnackBar(
+                      backgroundColor: Colors.red,
+                      content: Text("${book.title}を削除しました"));
+                  model.fetchBookList();
+                  ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                },
+              ),
+            ],
+          );
+        });
   }
 }
