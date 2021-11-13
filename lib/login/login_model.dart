@@ -43,8 +43,8 @@ class LoginModel extends ChangeNotifier {
           email: email!, password: password!);
 
 
-      final currentUser=FirebaseAuth.instance.currentUser;
-      final uid=currentUser!.uid;
+      // final currentUser=FirebaseAuth.instance.currentUser;
+      // final uid=currentUser!.uid;
 
     }
   }

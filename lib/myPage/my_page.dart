@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo211031/edit_profile/edit_profile_page.dart';
 import 'package:todo211031/myPage/my_model.dart';
 
 class MyPage extends StatelessWidget {
@@ -11,6 +12,23 @@ class MyPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text('マイページ'),
+          actions: [
+            Consumer<MyModel>(builder: (context, model, child) {
+              return IconButton(
+                onPressed: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EditProfilePage(model.name!, model.description!),
+                    ),
+                  );
+                  model.fetchUser();
+                },
+                icon: Icon(Icons.edit),
+              );
+            }),
+          ],
         ),
         body: Center(
           child: Consumer<MyModel>(builder: (context, model, child) {
@@ -18,11 +36,11 @@ class MyPage extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    Text("名前"),
+                    Text(model.name ?? "name"),
                     Text(model.email ?? "emailなし"),
-                    Text("自己紹介"),
+                    Text(model.description ?? "紹介なし"),
                     TextButton(
-                      onPressed: ()async {
+                      onPressed: () async {
                         await model.logout();
                         Navigator.of(context).pop();
                       },
