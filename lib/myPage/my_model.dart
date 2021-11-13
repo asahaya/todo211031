@@ -21,4 +21,9 @@ String? email;
   notifyListeners();
   }
 
+  Future logout()async{
+    await FirebaseAuth.instance.signOut();
+  }
+
+
 }

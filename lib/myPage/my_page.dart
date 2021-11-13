@@ -17,10 +17,17 @@ class MyPage extends StatelessWidget {
             return Stack(
               children: [
                 Column(
-                  children:  [
+                  children: [
                     Text("名前"),
                     Text(model.email ?? "emailなし"),
                     Text("自己紹介"),
+                    TextButton(
+                      onPressed: ()async {
+                        await model.logout();
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("ログアウト"),
+                    ),
                   ],
                 ),
                 if (model.isLoading)
